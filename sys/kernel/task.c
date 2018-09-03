@@ -467,7 +467,22 @@ int32_t hf_kill(uint16_t id)
 		for (j = i; j > 0; j--)
 			if (hf_queue_swap(krnl_rt_queue, j, j-1)) panic(PANIC_CANT_SWAP);
 		krnl_task2 = hf_queue_remhead(krnl_rt_queue);
-	}else{
+	
+	}
+	//CODIGO NOVO
+	else if(krnl_task->capacity)
+	{
+		k = hf_queue_count(krnl_aperiodic_queue);
+		for (i = 0; i < k; i++)
+			if (hf_queue_get(krnl_aperiodic_queue, i) == krnl_task) break;
+		if (!k || i == k) panic(PANIC_NO_TASKS_APERIODIC);
+		for (j = i; j > 0; j--)
+			if (hf_queue_swap(krnl_aperiodic_queue, j, j-1)) panic(PANIC_CANT_SWAP);
+		krnl_task2 = hf_queue_remhead(krnl_aperiodic_queue);
+	
+	}
+	//FIM DO CODIGO NOVO
+	else{
 		k = hf_queue_count(krnl_run_queue);
 		for (i = 0; i < k; i++)
 			if (hf_queue_get(krnl_run_queue, i) == krnl_task) break;

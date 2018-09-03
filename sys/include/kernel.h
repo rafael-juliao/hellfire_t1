@@ -55,6 +55,11 @@ struct pcb_entry {
 	uint32_t preempt_cswitch;			/*!< preeptive context switches */
 	uint32_t interrupts;				/*!< number of non-masked interrupts */
 	uint32_t tick_time;				/*!< tick time in microsseconds */
+	
+	// CODIGO NOVO
+	int32_t (*sched_aperiodic)();				/*!< pointer to the realtime scheduler */
+	// FIM CODIGO NOVO
+	
 	/* much more stuff should be here! */
 };
 

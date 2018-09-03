@@ -62,19 +62,6 @@ static void rt_queue_next()
 }
 
 
-
-//CODIGO NOVO
-static void aperiodic_queue_next()
-{
-	krnl_task = hf_queue_remhead(krnl_aperiodic_queue);
-	if (!krnl_task)
-		panic(PANIC_NO_TASKS_APERIODIC);
-	if (hf_queue_addtail(krnl_aperiodic_queue, krnl_task))
-		panic(PANIC_CANT_PLACE_APERIODIC);
-}
-// FIM DO CODIGO NOVO
-
-
 /**
  * @brief Task dispatcher.
  * 
@@ -147,7 +134,7 @@ void dispatch_isr(void *arg)
 int32_t sched_aperiodic_rr(void){
 
 	if (hf_queue_count(krnl_aperiodic_queue) == 0)
-		panic(PANIC_NO_TASKS_APERIODIC);
+		return 0;
 	do {
 		run_queue_next();
 	} while (krnl_task->state == TASK_BLOCKED);
