@@ -126,7 +126,16 @@ void dispatch_isr(void *arg)
 
 
 
-
+//CODIGO NOVO
+	static void aperiodic_queue_next()
+	{
+	krnl_task = hf_queue_remhead(krnl_aperiodic_queue);
+	if (!krnl_task)
+	panic(PANIC_NO_TASKS_APERIODIC);
+	if (hf_queue_addtail(krnl_aperiodic_queue, krnl_task))
+	panic(PANIC_CANT_PLACE_APERIODIC);
+	}
+	// FIM DO CODIGO NOVO
 
 //CODIGO NOVO
 //IMPLEMENTACAO DO ALGORITMO DE ESCALONAMENTO ROUND ROBIN 
@@ -136,13 +145,14 @@ int32_t sched_aperiodic_rr(void){
 	if (hf_queue_count(krnl_aperiodic_queue) == 0)
 		return 0;
 	do {
-		run_queue_next();
+		aperiodic_queue_next();
 	} while (krnl_task->state == TASK_BLOCKED);
 	krnl_task->bgjobs++;
 
 	return krnl_task->id;
 }
 //FIM DO CODIGO NOVO
+
 
 
 

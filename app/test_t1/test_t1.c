@@ -44,10 +44,10 @@ void app_main(void){
 	
 
 	for(i = 0; i < 5; i++)
-		hf_spawn(user, 0, 0, 0, "user", 2048);
+		hf_spawn(user, 0, 2, 20, "user", 2048);
 
 	for(i = 0; i < 1; i++)
-		hf_spawn(pigeon, 0, 0, 0, "pigeon", 2048);
+		hf_spawn(pigeon, 0, 2, 20, "pigeon", 2048);
 
 }
 
