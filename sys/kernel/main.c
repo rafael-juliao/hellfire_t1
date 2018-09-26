@@ -77,6 +77,15 @@ static void clear_pcb(void)
 	/* setup callbacks for the schedulers */
 	krnl_pcb.sched_rt = sched_rma;
 	krnl_pcb.sched_be = sched_priorityrr;
+	
+	//CODIGO NOVO
+	//APONTANDO O ALGORITMO DE ESCALONAMENTO APERIODICO
+	krnl_pcb.sched_aperiodic = sched_aperiodic_rr;
+	//TODO: Perguntar pro professor se pode usar algoritmo ja implementado, como abaixo
+	// krnl_pcb.sched_aperiodic = sched_lottery;
+	//FIM DO CODIGO NOVO
+
+
 	/* and clear the process control block */
 	krnl_pcb.coop_cswitch = 0;
 	krnl_pcb.preempt_cswitch = 0;
@@ -92,6 +101,13 @@ static void init_queues(void)
 	if (krnl_delay_queue == NULL) panic(PANIC_OOM);
 	krnl_rt_queue = hf_queue_create(MAX_TASKS);
 	if (krnl_rt_queue == NULL) panic(PANIC_OOM);
+
+	//CODIGO NOVO
+	//INICIANDO QUEUE APERIODICA
+	krnl_aperiodic_queue = hf_queue_create(MAX_TASKS);
+	if (krnl_aperiodic_queue == NULL) panic(PANIC_OOM);
+	//FIM DO CODIGO NOVO
+
 }
 
 static void idletask(void)

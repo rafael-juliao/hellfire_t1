@@ -15,4 +15,9 @@
 #define PANIC_NUTS_SEM			0x0d
 #define PANIC_UNKNOWN			0xff
 
+//CODIGO NOVO
+#define PANIC_NO_TASKS_APERIODIC			0x10
+#define PANIC_CANT_PLACE_APERIODIC			0x11
+//FIM DO CODIGO NOVO
+
 void panic(int32_t cause);

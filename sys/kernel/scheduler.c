@@ -62,6 +62,19 @@ static void rt_queue_next()
 }
 
 
+
+//CODIGO NOVO
+static void aperiodic_queue_next()
+{
+	krnl_task = hf_queue_remhead(krnl_aperiodic_queue);
+	if (!krnl_task)
+		panic(PANIC_NO_TASKS_APERIODIC);
+	if (hf_queue_addtail(krnl_aperiodic_queue, krnl_task))
+		panic(PANIC_CANT_PLACE_APERIODIC);
+}
+// FIM DO CODIGO NOVO
+
+
 /**
  * @brief Task dispatcher.
  * 
@@ -96,13 +109,24 @@ void dispatch_isr(void *arg)
 		krnl_task->state = TASK_READY;
 	if (krnl_task->pstack[0] != STACK_MAGIC)
 		panic(PANIC_STACK_OVERFLOW);
+
 	if (krnl_tasks > 0){
 		process_delay_queue();
 		krnl_current_task = krnl_pcb.sched_rt();
+
+		//CODIGO NOVO
+		// CASO == 0, ENTÃO NÃO EXISTE TASK REAL TIME
+		// NESSE CASO ENTÃO TENTA SCHEDULAR UMA TASK APERIODICA
+		if (krnl_current_task == 0)
+			krnl_current_task = krnl_pcb.sched_aperiodic();
+		//FIM DO CODIGO NOVO
+
 		if (krnl_current_task == 0)
 			krnl_current_task = krnl_pcb.sched_be();
+
 		krnl_task->state = TASK_RUNNING;
 		krnl_pcb.preempt_cswitch++;
+
 #if KERNEL_LOG >= 1
 		dprintf("\n%d %d %d %d %d ", krnl_current_task, krnl_task->period, krnl_task->capacity, krnl_task->deadline, (uint32_t)_read_us());
 #endif
@@ -112,6 +136,36 @@ void dispatch_isr(void *arg)
 		panic(PANIC_NO_TASKS_LEFT);
 	}
 }
+
+
+
+
+
+//CODIGO NOVO
+//IMPLEMENTACAO DO ALGORITMO DE ESCALONAMENTO ROUND ROBIN 
+// COPIADO DO DEBAIXO
+int32_t sched_aperiodic_rr(void){
+
+	if (hf_queue_count(krnl_aperiodic_queue) == 0)
+		panic(PANIC_NO_TASKS_APERIODIC);
+	do {
+		run_queue_next();
+	} while (krnl_task->state == TASK_BLOCKED);
+	krnl_task->bgjobs++;
+
+	return krnl_task->id;
+}
+//FIM DO CODIGO NOVO
+
+
+
+
+
+
+
+
+
+
 
 /**
  * @brief Best effort (BE) scheduler (callback).
