@@ -231,7 +231,7 @@ printf("\n\nSPAWN TASK");
 #if KERNEL_LOG == 2
 	dprintf("hf_spawn() %d ", (uint32_t)_read_us());
 #endif
-	if (deadline < capacity)
+	if (( period > 0 && period < capacity)||(deadline < capacity))
 		return ERR_INVALID_PARAMETER;
 	
 	status = _di();
