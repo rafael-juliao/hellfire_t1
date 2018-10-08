@@ -11,7 +11,7 @@ void thread(void)
 
 void app_main(void){
 	int32_t i;
-	
+	printf("\nApp Main Started");
 	for (i = 0; i < 10; i++)
-		hf_spawn(thread, 0, 2, 20, "thread", 1024);
+		hf_spawn(thread, 0, 10, 20, "thread", 1024);
 }

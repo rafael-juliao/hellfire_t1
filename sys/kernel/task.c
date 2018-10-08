@@ -227,11 +227,11 @@ int32_t hf_priorityget(uint16_t id)
 int32_t hf_spawn(void (*task)(), uint16_t period, uint16_t capacity, uint16_t deadline, int8_t *name, uint32_t stack_size)
 {
 	volatile uint32_t status, i = 0;
-
+printf("\n\nSPAWN TASK");
 #if KERNEL_LOG == 2
 	dprintf("hf_spawn() %d ", (uint32_t)_read_us());
 #endif
-	if ((period < capacity) || (deadline < capacity))
+	if (deadline < capacity)
 		return ERR_INVALID_PARAMETER;
 	
 	status = _di();
@@ -267,19 +267,23 @@ int32_t hf_spawn(void (*task)(), uint16_t period, uint16_t capacity, uint16_t de
 	krnl_task->pstack = (size_t *)hf_malloc(stack_size);
 	_set_task_sp(krnl_task->id, (size_t)krnl_task->pstack + (stack_size - 4));
 	_set_task_tp(krnl_task->id, krnl_task->ptask);
+	
 	if (krnl_task->pstack){
 		krnl_task->pstack[0] = STACK_MAGIC;
 		kprintf("\nKERNEL: [%s], id: %d, p:%d, c:%d, d:%d, addr: %x, sp: %x, ss: %d bytes", krnl_task->name, krnl_task->id, krnl_task->period, krnl_task->capacity, krnl_task->deadline, krnl_task->ptask, _get_task_sp(krnl_task->id), stack_size);
 		if (period){
+			printf("\nADDING TASK ==> REAL TIME QUEUE\n");
 			if (hf_queue_addtail(krnl_rt_queue, krnl_task)) panic(PANIC_CANT_PLACE_RT);
 		}
 		//CODIGO NOVO
 		else if (capacity){
+			printf("\nADDING TASK ==> APERIODIC QUEUE\n");
 			if (hf_queue_addtail(krnl_aperiodic_queue, krnl_task)) panic(PANIC_CANT_PLACE_APERIODIC);
 		}
 		//FIM DO CODIGO NOVO
 		
 		else{
+			printf("\nADDING TASK ==> BEST EFFORT QUEUE\n");
 			if (hf_queue_addtail(krnl_run_queue, krnl_task)) panic(PANIC_CANT_PLACE_RUN);
 		}
 	}else{

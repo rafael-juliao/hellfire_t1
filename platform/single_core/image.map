@@ -299,7 +299,7 @@ Mapa de memória e script de vinculador
                 0x000000004ffffffc                _stack = 0x4ffffffc
                 0x0000000000000000                . = 0x0
 
-.text           0x0000000040000000     0x29bc
+.text           0x0000000040000000     0x29f4
  *(.text.init)
                 0x0000000040000000                _text = .
  *(.text)
@@ -465,99 +465,99 @@ Mapa de memória e script de vinculador
                 0x0000000040002540       0x38 task.o
                 0x0000000040002540                hf_selfid
  .text.hf_spawn
-                0x0000000040002578      0x380 task.o
+                0x0000000040002578      0x3ac task.o
                 0x0000000040002578                hf_spawn
- .text.thread   0x00000000400028f8       0x50 test_t1.o
-                0x00000000400028f8                thread
+ .text.thread   0x0000000040002924       0x50 test_t1.o
+                0x0000000040002924                thread
  .text.app_main
-                0x0000000040002948       0x74 test_t1.o
-                0x0000000040002948                app_main
-                0x00000000400029bc                _etext = .
+                0x0000000040002974       0x80 test_t1.o
+                0x0000000040002974                app_main
+                0x00000000400029f4                _etext = .
 
-.rodata         0x00000000400029bc      0x90c
-                0x00000000400029bc                _rodata = .
+.rodata         0x00000000400029f4      0x9a0
+                0x00000000400029f4                _rodata = .
  *(.rodata)
  *(.rodata.*)
  .rodata.str1.4
-                0x00000000400029bc       0x7b hal.o
+                0x00000000400029f4       0x7b hal.o
                                          0x7c (tamanho antes de relaxar)
- *fill*         0x0000000040002a37        0x1 
+ *fill*         0x0000000040002a6f        0x1 
  .rodata.str1.4
-                0x0000000040002a38        0xa interrupt.o
+                0x0000000040002a70        0xa interrupt.o
                                           0xc (tamanho antes de relaxar)
- *fill*         0x0000000040002a42        0x2 
+ *fill*         0x0000000040002a7a        0x2 
  .rodata.str1.4
-                0x0000000040002a44       0x1f kprintf.o
+                0x0000000040002a7c       0x1f kprintf.o
                                          0x20 (tamanho antes de relaxar)
- *fill*         0x0000000040002a63        0x1 
+ *fill*         0x0000000040002a9b        0x1 
  .rodata.str1.4
-                0x0000000040002a64       0x63 libc.o
+                0x0000000040002a9c       0x63 libc.o
                                          0x78 (tamanho antes de relaxar)
- *fill*         0x0000000040002ac7        0x1 
+ *fill*         0x0000000040002aff        0x1 
  .rodata.vsprintf
-                0x0000000040002ac8       0x84 libc.o
+                0x0000000040002b00       0x84 libc.o
  .rodata.str1.4
-                0x0000000040002b4c      0x1c0 main.o
+                0x0000000040002b84      0x1c0 main.o
                                         0x1cc (tamanho antes de relaxar)
  .rodata.str1.4
-                0x0000000040002d0c      0x200 panic.o
- .rodata.panic  0x0000000040002f0c       0x48 panic.o
+                0x0000000040002d44      0x200 panic.o
+ .rodata.panic  0x0000000040002f44       0x48 panic.o
  .rodata.str1.4
-                0x0000000040002f54       0x62 processor.o
+                0x0000000040002f8c       0x62 processor.o
                                          0x64 (tamanho antes de relaxar)
- *fill*         0x0000000040002fb6        0x2 
+ *fill*         0x0000000040002fee        0x2 
  .rodata.str1.4
-                0x0000000040002fb8       0x31 scheduler.o
-                                         0x34 (tamanho antes de relaxar)
- *fill*         0x0000000040002fe9        0x3 
+                0x0000000040002ff0       0x35 scheduler.o
+                                         0x38 (tamanho antes de relaxar)
+ *fill*         0x0000000040003025        0x3 
  .rodata.str1.4
-                0x0000000040002fec      0x2cb task.o
-                                        0x2e0 (tamanho antes de relaxar)
- *fill*         0x00000000400032b7        0x1 
+                0x0000000040003028      0x347 task.o
+                                        0x35c (tamanho antes de relaxar)
+ *fill*         0x000000004000336f        0x1 
  .rodata.str1.4
-                0x00000000400032b8       0x10 test_t1.o
-                0x00000000400032c8                _erodata = .
+                0x0000000040003370       0x24 test_t1.o
+                0x0000000040003394                _erodata = .
 
-.data           0x00000000400032c8        0x8
-                0x00000000400032c8                _data = .
+.data           0x0000000040003394        0xc
+                0x0000000040003394                _data = .
  *(.data)
  *(.data.*)
  .data.oops.1159
-                0x00000000400032c8        0x4 main.o
-                0x000000004000b2bc                _gp = (. + 0x7ff0)
+                0x0000000040003394        0x4 main.o
+                0x000000004000b388                _gp = (. + 0x7ff0)
  *(.sdata)
  *(.sdata.*)
-                0x00000000400032d0                . = ALIGN (0x10)
- *fill*         0x00000000400032cc        0x4 
-                0x00000000400032d0                _edata = .
+                0x00000000400033a0                . = ALIGN (0x10)
+ *fill*         0x0000000040003398        0x8 
+                0x00000000400033a0                _edata = .
 
-.bss            0x00000000400032d0    0x7b440
-                0x00000000400032d0                _bss_start = .
+.bss            0x00000000400033a0    0x7b440
+                0x00000000400033a0                _bss_start = .
  *(.sbss)
  *(.sbss.*)
  *(.bss)
  *(.bss.*)
  .bss.timecount.1314
-                0x00000000400032d0        0x4 hal.o
+                0x00000000400033a0        0x4 hal.o
  .bss.lastcount.1315
-                0x00000000400032d4        0x4 hal.o
+                0x00000000400033a4        0x4 hal.o
  .bss.tref.1328
-                0x00000000400032d8        0x4 hal.o
+                0x00000000400033a8        0x4 hal.o
  .bss.tval2.1327
-                0x00000000400032dc        0x4 hal.o
+                0x00000000400033ac        0x4 hal.o
  .bss.timeref.1326
-                0x00000000400032e0        0x8 hal.o
- .bss.isr       0x00000000400032e8       0x80 interrupt.o
- .bss.buf.987   0x0000000040003368       0x20 kprintf.o
+                0x00000000400033b0        0x8 hal.o
+ .bss.isr       0x00000000400033b8       0x80 interrupt.o
+ .bss.buf.987   0x0000000040003438       0x20 kprintf.o
  .bss.krnl_malloc
-                0x0000000040003388        0x4 malloc.o
-                0x000000004000338c                . = ALIGN (0x4)
-                0x000000004000338c                _bss_end = .
- COMMON         0x000000004000338c    0x7b384 condvar.o
-                0x000000004000338c                krnl_tcb
-                0x00000000400045d4                krnl_heap
-                0x000000004007e6f4                krnl_pcb
-                0x000000004007e710                _end = .
+                0x0000000040003458        0x4 malloc.o
+                0x000000004000345c                . = ALIGN (0x4)
+                0x000000004000345c                _bss_end = .
+ COMMON         0x000000004000345c    0x7b384 condvar.o
+                0x000000004000345c                krnl_tcb
+                0x00000000400046a4                krnl_heap
+                0x000000004007e7c4                krnl_pcb
+                0x000000004007e7e0                _end = .
 LOAD condvar.o
 LOAD crc.o
 LOAD crt0.o
@@ -580,21 +580,21 @@ LOAD task.o
 LOAD test_t1.o
 OUTPUT(image.elf elf32-bigmips)
 
-.scommon        0x000000004007e710       0x30
- .scommon       0x000000004007e710       0x28 condvar.o
-                0x000000004007e710                krnl_current_task
-                0x000000004007e714                krnl_task
-                0x000000004007e718                krnl_event_queue
-                0x000000004007e71c                krnl_aperiodic_queue
-                0x000000004007e720                krnl_tasks
-                0x000000004007e724                krnl_free
-                0x000000004007e728                krnl_run_queue
-                0x000000004007e72c                krnl_rt_queue
-                0x000000004007e730                krnl_schedule
-                0x000000004007e734                krnl_delay_queue
- .scommon       0x000000004007e738        0x8 eth_enc28j60.o
-                0x000000004007e738                last_free
-                0x000000004007e73c                first_free
+.scommon        0x000000004007e7e0       0x30
+ .scommon       0x000000004007e7e0       0x28 condvar.o
+                0x000000004007e7e0                krnl_current_task
+                0x000000004007e7e4                krnl_task
+                0x000000004007e7e8                krnl_event_queue
+                0x000000004007e7ec                krnl_aperiodic_queue
+                0x000000004007e7f0                krnl_tasks
+                0x000000004007e7f4                krnl_free
+                0x000000004007e7f8                krnl_run_queue
+                0x000000004007e7fc                krnl_rt_queue
+                0x000000004007e800                krnl_schedule
+                0x000000004007e804                krnl_delay_queue
+ .scommon       0x000000004007e808        0x8 eth_enc28j60.o
+                0x000000004007e808                last_free
+                0x000000004007e80c                first_free
 
 .reginfo        0x0000000000000000       0x18
  .reginfo       0x0000000000000000       0x18 condvar.o
