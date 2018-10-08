@@ -126,6 +126,8 @@ int32_t hf_jobs(uint16_t id)
 		if (krnl_tcb[id].ptask){
 			if (krnl_tcb[id].period)
 				return krnl_tcb[id].rtjobs;
+			else if (krnl_tcb[id].capacity)
+				return krnl_tcb[id].aperiodic_jobs;
 			else
 				return krnl_tcb[id].bgjobs;
 		}
@@ -254,6 +256,7 @@ int32_t hf_spawn(void (*task)(), uint16_t period, uint16_t capacity, uint16_t de
 	krnl_task->capacity_rem = capacity;
 	krnl_task->deadline_rem = deadline;
 	krnl_task->rtjobs = 0;
+	krnl_task->aperiodic_jobs = 0;
 	krnl_task->bgjobs = 0;
 	krnl_task->deadline_misses = 0;
 	krnl_task->ptask = task;
@@ -549,7 +552,22 @@ int32_t hf_delay(uint16_t id, uint32_t delay)
 		for (j = i; j > 0; j--)
 			if (hf_queue_swap(krnl_rt_queue, j, j-1)) panic(PANIC_CANT_SWAP);
 		krnl_task2 = hf_queue_remhead(krnl_rt_queue);
-	}else{
+	}
+
+	//CODIGO NOVO
+	if (krnl_task->capacity){
+		k = hf_queue_count(krnl_aperiodic_queue);
+		for (i = 0; i < k; i++)
+			if (hf_queue_get(krnl_aperiodic_queue, i) == krnl_task) break;
+		if (!k || i == k) panic(PANIC_NO_TASKS_APERIODIC);
+		for (j = i; j > 0; j--)
+			if (hf_queue_swap(krnl_aperiodic_queue, j, j-1)) panic(PANIC_CANT_SWAP);
+		krnl_task2 = hf_queue_remhead(krnl_aperiodic_queue);
+	}	
+	//FIM DO CODIGO NOVO
+
+
+	else{
 		k = hf_queue_count(krnl_run_queue);
 		for (i = 0; i < k; i++)
 			if (hf_queue_get(krnl_run_queue, i) == krnl_task) break;
