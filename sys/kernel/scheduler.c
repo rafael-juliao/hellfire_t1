@@ -113,9 +113,7 @@ void dispatch_isr(void *arg)
 		// NESSE CASO ENTÃO TENTA SCHEDULAR UMA TASK APERIODICA
 		if (krnl_current_task == 0){
 			krnl_current_task = krnl_pcb.sched_aperiodic();
-			if (krnl_current_task == 0){
-				printf("APERIODIC EMPTY\n");
-			}
+		
 		}
 		//FIM DO CODIGO NOVO
 
@@ -141,11 +139,38 @@ void dispatch_isr(void *arg)
 //CODIGO NOVO
 static void aperiodic_queue_next()
 {
-krnl_task = hf_queue_remhead(krnl_aperiodic_queue);
-if (!krnl_task)
-panic(PANIC_NO_TASKS_APERIODIC);
-if (hf_queue_addtail(krnl_aperiodic_queue, krnl_task))
-panic(PANIC_CANT_PLACE_APERIODIC);
+	
+	//Verifica se fila não está vazia devido a recursão
+	if ( hf_queue_count(krnl_aperiodic_queue) == 0)
+		return;
+	
+	//Retira task do começo da fila
+	krnl_task = hf_queue_remhead(krnl_aperiodic_queue);
+	if (!krnl_task){
+		panic(PANIC_NO_TASKS_APERIODIC);
+	}
+
+
+	//Adiciona novamente essa task no final da fila
+	if (hf_queue_addtail(krnl_aperiodic_queue, krnl_task))
+		panic(PANIC_CANT_PLACE_APERIODIC);
+
+	//Caso a capacidade remanescente seja maior que zero 
+	if( krnl_task->capacity_rem > 0){
+		//Retorna para Scheduler prosseguir
+
+		return;
+	}
+
+	
+	// Caso a capacidade remanescente seja 0
+	//Elimita a task com um hf_kill()
+	hf_kill(krnl_task->id);
+
+	//Executa recursivamente para buscar proxima task
+	aperiodic_queue_next();
+
+
 }
 // FIM DO CODIGO NOVO
 
@@ -154,12 +179,18 @@ panic(PANIC_CANT_PLACE_APERIODIC);
 // COPIADO DO DEBAIXO
 int32_t sched_aperiodic_rr(void){
 
-	if (hf_queue_count(krnl_aperiodic_queue) == 0)
-		return 0;
 	do {
+		
 		aperiodic_queue_next();
+
+		if ( hf_queue_count(krnl_aperiodic_queue) == 0)
+			return 0;
+
+		
 	} while (krnl_task->state == TASK_BLOCKED);
+
 	krnl_task->aperiodic_jobs++;
+	krnl_task->capacity_rem--;
 
 	return krnl_task->id;
 }

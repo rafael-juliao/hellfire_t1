@@ -227,12 +227,14 @@ int32_t hf_priorityget(uint16_t id)
 int32_t hf_spawn(void (*task)(), uint16_t period, uint16_t capacity, uint16_t deadline, int8_t *name, uint32_t stack_size)
 {
 	volatile uint32_t status, i = 0;
-printf("\n\nSPAWN TASK");
 #if KERNEL_LOG == 2
 	dprintf("hf_spawn() %d ", (uint32_t)_read_us());
 #endif
-	if (( period > 0 && period < capacity)||(deadline < capacity))
+
+	if( period > 0 && ( period < capacity || deadline < capacity) ){
 		return ERR_INVALID_PARAMETER;
+	}
+
 	
 	status = _di();
 	while ((krnl_tcb[i].ptask != 0) && (i < MAX_TASKS))
@@ -437,6 +439,7 @@ int32_t hf_resume(uint16_t id)
  */
 int32_t hf_kill(uint16_t id)
 {
+	printf("\n\n~~>KILLING<~~ TASK ID: %d", id);
 	volatile uint32_t status;
 	int32_t i, j, k;
 	struct tcb_entry *krnl_task2;
@@ -509,6 +512,7 @@ int32_t hf_kill(uint16_t id)
 		_ei(status);
 	}
 
+	printf("\n");
 	return ERR_OK;
 }
 
